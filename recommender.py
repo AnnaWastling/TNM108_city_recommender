@@ -31,7 +31,6 @@ def load():
     df.to_csv('newTextFile.csv', sep='\t')
     df.fillna(df.mean)
 
-    print(df.columns[0])
     data = df.set_index('City').iloc[1,1:-1]
     scores = df.set_index('City').iloc[:,1:-1].round()
     location = []
