@@ -106,7 +106,7 @@ def main():
                 st.text(f'\n\n\n')
                 st.markdown('--------------------------------------------**Recommendation**--------------------------------------------')
                 st.text(f'\n\n\n\n\n\n')
-                for index, val in enumerate(df_cities["City"]):
+                for index, val in enumerate(df_cities["City"]): # ändra 1an till index
                     st.markdown(f'Based on your aggregate preferences and ratings, **{df_cities["City"][1]}** is the top recommended city to move/travel to.')
                     title, country , subtitle, response = final_answer(df, df_cities["City"][1], data)
                     st.text(f'\n\n\n\n\n\n')
