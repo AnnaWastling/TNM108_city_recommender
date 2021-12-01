@@ -1,11 +1,9 @@
 # import libriaries
 import streamlit as st
-from PIL import Image
 import pandas as pd
 import numpy as np
 import time
 from sklearn.metrics.pairwise import cosine_similarity
-
 # import the data and create revelent dataframes
 def load():
     # url = 'https://www.nestpick.com/work-from-anywhere-index/'
@@ -55,11 +53,21 @@ def final_answer(df,word, data):
     else:
         response = ""
 
-    #ranking = list(zip(list(data.loc[word].index),data.loc[word]))
+    return title, country , subtitle, response #, breakdown
+
+def table(data, city):
+
+    #ranking = list(zip(list(data.loc[city].index),data.loc[city]))
     #breakdown = pd.DataFrame(ranking, columns = ['Category','Score'])
     #breakdown['Score'] = breakdown['Score'].round(1)
 
-    return title, country , subtitle, response #, breakdown
+    source = pd.DataFrame(
+        np.random.randn(10,5),
+        columns=('col %d' % i for i in range(5))
+    )
+    #Get information about the cities. 
+    chart = st.bar_chart(source)
+    return chart 
 
 #The app controller
 def main():
@@ -107,6 +115,7 @@ def main():
                 st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
                 st.write(f'{city_similar} is a city in {country}. {response}')
                 st.text(subtitle)
+                table(data, city_similar)
                 #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).background_gradient(cmap='Blues').set_properties(subset=['Score'], **{'width': '250px'}))
                 st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
 
