@@ -11,7 +11,7 @@ def load():
     # url = 'https://www.nestpick.com/work-from-anywhere-index/'
 
     df = pd.read_csv('city_ranking.csv',header=0)
-    df.to_csv('newTextFile.csv', sep='\t')
+    
     df.fillna(df.mean)
 
     data = df.set_index('City').iloc[1,1:-1]
@@ -37,7 +37,7 @@ def find_similarity(column, user, number,scores, city): # city == staden man kom
         value.append(score) # sparar värdet i value
         # ÄNDRA HÄR FÖR ATT FÅ FLERA STÄDER
     similarity = pd.Series(value, index=new_df.index)
-    city_similar = similarity.sort_values(ascending=False).astype(float).idxmax() #Instead of idxmax use 5 top values for multiple cities?
+    city_similar = similarity.sort_values(ascending=False).astype(float).iloc[:5] #Instead of idxmax use 5 top values for multiple cities?
     # message = f'Based on your aggregate preferences and ratings, {city_similar} is the top recommended city to move/travel to.'
     return city_similar
 
@@ -96,19 +96,22 @@ def main():
                 column = preference # hämtar kolumn siffror för varje preferens som användaren fyllt i
                 number = len(preference)
                 city_similar = find_similarity(column, user, number,scores,city)
+                city_similar.to_csv('newTextFile.csv', sep='\t')
                 with st.spinner("Analysing..."):
                     time.sleep(5)
                 st.text(f'\n\n\n')
                 st.markdown('--------------------------------------------**Recommendation**--------------------------------------------')
                 st.text(f'\n\n\n\n\n\n')
-                st.markdown(f'Based on your aggregate preferences and ratings, **{city_similar}** is the top recommended city to move/travel to.')
-                title, country , subtitle, response = final_answer(df, city_similar, data)
-                st.text(f'\n\n\n\n\n\n')
-                st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
-                st.write(f'{city_similar} is a city in {country}. {response}')
-                st.text(subtitle)
-                #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).background_gradient(cmap='Blues').set_properties(subset=['Score'], **{'width': '250px'}))
-                st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
+                for index, val in enumerate(city_similar):
+                    st.markdown(f'Based on your aggregate preferences and ratings, **{index}** is the top recommended city to move/travel to.')
+                    title, country , subtitle, response = final_answer(df, index, data)
+                    st.text(f'\n\n\n\n\n\n')
+                    
+                    st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
+                    st.write(f'{index} is a city in {country}. {response}')
+                    st.text(subtitle)
+                    #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).background_gradient(cmap='Blues').set_properties(subset=['Score'], **{'width': '250px'}))
+                    st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
 
 
          elif len(preference) > 5:
