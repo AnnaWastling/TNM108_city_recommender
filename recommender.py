@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import time
 from sklearn.metrics.pairwise import cosine_similarity
-import matplotlib.pyplot as plt
 
 # import the data and create revelent dataframes
 def load():
@@ -99,8 +98,7 @@ def main():
                 
                 #for index, val in enumerate(df): # ändra 1an till index
                     
-                breakdown = pd.DataFrame(df, columns = ['Category','Score'])
-                breakdown['Score'] = breakdown['Score'].round(1)
+                
                     
                 with st.spinner("Analysing..."):
                     time.sleep(5)
@@ -117,6 +115,9 @@ def main():
                     st.text(f'\n\n\n\n\n\n')
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
                     st.write(f'{df_cities["City"][index]} is a city in {country}. {response}')
+
+                    breakdown = pd.DataFrame(df["City"], columns = ['Category','Score'])
+                    breakdown['Score'] = breakdown['Score'].round(1)
                     st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
                 st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
 
