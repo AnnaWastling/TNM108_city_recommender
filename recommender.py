@@ -23,7 +23,7 @@ def load():
     return df, data,scores, location
 
 #Calculate the cosine-similarity
-def find_similarity(column, user, number,scores, city): # city == staden man kommer ifrån, number = antalet prefenser, user = värden från sliders
+def find_similarity(column, user, number,scores, city, numberOfCities): # city == staden man kommer ifrån, number = antalet prefenser, user = värden från sliders
     if city == 'Others':
         new_df = scores[column]
     else:
@@ -37,7 +37,7 @@ def find_similarity(column, user, number,scores, city): # city == staden man kom
         value.append(score) # sparar värdet i value
         # ÄNDRA HÄR FÖR ATT FÅ FLERA STÄDER
     similarity = pd.Series(value, index=new_df.index)
-    city_similar = similarity.sort_values(ascending=False).astype(float).iloc[1:5] #Instead of idxmax use 5 top values for multiple cities?
+    city_similar = similarity.sort_values(ascending=False).astype(float).iloc[0:numberOfCities] #Instead of idxmax use 5 top values for multiple cities?
     
     # message = f'Based on your aggregate preferences and ratings, {city_similar} is the top recommended city to move/travel to.'
     return city_similar
@@ -54,7 +54,9 @@ def main():
     st.title('City Recommender')
     df, data,scores, location = load()
     location.append('Others')
+    numbers = ([1,2,3,4,5])
     city = st.selectbox("Location of Residence", location)
+    numberOfCities= st.selectbox("how many", numbers)
     preference = st.multiselect("Choose the 5 features that matters to you the most in a city",scores.columns)
     if st.checkbox("Rate the features"):
          if len(preference) == 5 :
@@ -68,7 +70,7 @@ def main():
 
                 column = preference # hämtar kolumn siffror för varje preferens som användaren fyllt i
                 number = len(preference)
-                city_similar = find_similarity(column, user, number,scores,city)
+                city_similar = find_similarity(column, user, number,scores,city, numberOfCities)
 
                 city_similar.to_csv('newTextFile.csv')
                 df_cities = pd.read_csv('newTextFile.csv', usecols=['City', '0'])
@@ -88,7 +90,7 @@ def main():
                 st.markdown(f'Based on your aggregate preferences and ratings, ')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
                     st.markdown(f'{index+1}. **{df_cities["City"][index]},**')
-                st.markdown(f'are the top 4 recommended cities to move/travel to.')
+                st.markdown(f'are the top {numberOfCities} recommended cities to move/travel to.')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
                     (title, country) = final_answer(df, df_cities["City"][index], data)
                     st.text(f'\n\n\n\n\n\n')
