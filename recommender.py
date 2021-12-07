@@ -94,12 +94,6 @@ def main():
                     st.text(f'\n\n\n\n\n\n')
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
                     st.write(f'{df_cities["City"][index]} is a city in {country}.')
-                   
-                    #getCity = df[["City"]].loc[city]
-                    #getCity.to_csv("Test")
-                    #breakdown = pd.DataFrame(getCity, columns = ['Category','Score'])
-                    #breakdown['Score'] = breakdown['Score'].round(1)
-                    #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
                 st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/work-from-anywhere-index/)')
 
 
