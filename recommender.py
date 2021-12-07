@@ -86,14 +86,14 @@ def main():
     city = st.selectbox("Location of Residence", location)
     preference = st.multiselect("Choose the 5 features that matters to you the most in a city",scores.columns)
     if st.checkbox("Rate the features"):
-         if len(preference) == 1 :
+         if len(preference) == 5 :
             level1 = st.slider(preference[0], 1,10)
-          #  level2 = st.slider(preference[1], 1,10)
-          #  level3 = st.slider(preference[2], 1,10)
-          #  level4 = st.slider(preference[3], 1,10)
-           # level5 = st.slider(preference[4], 1,10)
+            level2 = st.slider(preference[1], 1,10)
+            level3 = st.slider(preference[2], 1,10)
+            level4 = st.slider(preference[3], 1,10)
+            level5 = st.slider(preference[4], 1,10)
             if st.button("Recommend", key="hi"):
-                user = np.array([level1]) # level2,level3,level4,level5])
+                user = np.array([level1,level2,level3,level4,level5]) 
                 column = preference # hämtar kolumn siffror för varje preferens som användaren fyllt i
                 number = len(preference)
                 city_similar = find_similarity(column, user, number,scores,city)
@@ -107,13 +107,13 @@ def main():
                 st.markdown('--------------------------------------------**Recommendation**--------------------------------------------')
                 st.text(f'\n\n\n\n\n\n')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
-                    st.markdown(f'Based on your aggregate preferences and ratings, **{df_cities["City"][1]}** is the top recommended city to move/travel to.')
-                    title, country , subtitle, response = final_answer(df, df_cities["City"][1], data)
+                    st.markdown(f'Based on your aggregate preferences and ratings, **{df_cities["City"][index]}** is the top recommended city to move/travel to.')
+                    title, country , subtitle, response = final_answer(df, df_cities["City"][index], data)
                     st.text(f'\n\n\n\n\n\n')
                     
                     
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
-                    st.write(f'{df_cities["City"][1]} is a city in {country}. {response}')
+                    st.write(f'{df_cities["City"][index]} is a city in {country}. {response}')
                     st.text(subtitle)
                     #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).background_gradient(cmap='Blues').set_properties(subset=['Score'], **{'width': '250px'}))
                     st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
