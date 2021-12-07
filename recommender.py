@@ -54,7 +54,7 @@ def main():
     st.title('City Recommender')
     df, data,scores, location = load()
     location.append('Others')
-    numbers = ([1,2,3,4,5])
+    numbers = ([1,2,3,4,5,6,7,8,9,10])
     city = st.selectbox("Location of Residence", location)
     numberOfCities= st.selectbox("how many", numbers)
     preference = st.multiselect("Choose the 5 features that matters to you the most in a city",scores.columns)
