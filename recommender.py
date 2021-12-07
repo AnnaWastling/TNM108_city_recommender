@@ -45,34 +45,13 @@ def find_similarity(column, user, number,scores, city): # city == staden man kom
 # Get more info about the recommended city
 def final_answer(df,word, data):
     title = f'About {word}'
-    subtitle = 'City Ranking in terms of Business, essentials, Openness and recreation scores(over 10.0)'
     country = df.loc[df['City'] == word, 'Country'].iloc[0]
-    if word in df['City'].head().values:
-        response = "It is actually one of the top 5 cities that has piqued millennials' interests."
-    elif word in df['City'].head(10).values:
-        response = "It is actually one of the top 10 cities that has piqued millennials' interests."
-    elif word in df['City'].tail(5).values:
-        response = "It is actually one of the least 5 cities that has piqued millennials' interests."
-    else:
-        response = ""
 
-    #ranking = list(zip(list(data.loc[word].index),data.loc[word]))
-    #breakdown = pd.DataFrame(ranking, columns = ['Category','Score'])
-    #breakdown['Score'] = breakdown['Score'].round(1)
-
-    return title, country , subtitle, response #, breakdown
+    return title, country 
 
 #The app controller
 def main():
     st.title('City Recommender')
-    # st.write(intro)
-    # image= Image.open('unsplash2.jpg')
-    # st.image(image, use_column_width=True)
-   
-
-
-    #st.markdown(unsafe_allow_html=True)
-
     df, data,scores, location = load()
     location.append('Others')
     city = st.selectbox("Location of Residence", location)
@@ -111,10 +90,10 @@ def main():
                     st.markdown(f'{index+1}. **{df_cities["City"][index]},**')
                 st.markdown(f'are the top 4 recommended cities to move/travel to.')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
-                    (title, country , subtitle, response) = final_answer(df, df_cities["City"][index], data)
+                    (title, country) = final_answer(df, df_cities["City"][index], data)
                     st.text(f'\n\n\n\n\n\n')
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
-                    st.write(f'{df_cities["City"][index]} is a city in {country}. {response}')
+                    st.write(f'{df_cities["City"][index]} is a city in {country}.')
                    
                     #getCity = df[["City"]].loc[city]
                     #getCity.to_csv("Test")
