@@ -100,7 +100,7 @@ def main():
                     #breakdown = pd.DataFrame(getCity, columns = ['Category','Score'])
                     #breakdown['Score'] = breakdown['Score'].round(1)
                     #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
-                st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
+                st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/work-from-anywhere-index/)')
 
 
          elif len(preference) > 5:
