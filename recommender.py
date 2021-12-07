@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import time
 from sklearn.metrics.pairwise import cosine_similarity
+import matplotlib.pyplot as plt
 
 # import the data and create revelent dataframes
 def load():
@@ -68,18 +69,10 @@ def main():
     # st.write(intro)
     # image= Image.open('unsplash2.jpg')
     # st.image(image, use_column_width=True)
-    html_temp = """
-    <div style="background-color:Turquoise;padding:13px">
-    <p>The frequency at which people move from city to city has been growing.
-    It is becoming cheaper to move around to the extent that <b>Cost of Moving</b> is becoming the least reason to move or travel.
-    People leave their city for other reasons or preferences and some of these preferences have been captured in the app to <b>help recommend your next city move or travel</b>.
-    Below, you get to choose 5 aspect of a city that is most important to you and then you get to rank them in terms of importance from 1 to 10.</p>
-    </div>
-    <br>
-    """
+   
 
 
-    st.markdown(html_temp, unsafe_allow_html=True)
+    #st.markdown(unsafe_allow_html=True)
 
     df, data,scores, location = load()
     location.append('Others')
@@ -94,38 +87,44 @@ def main():
             level5 = st.slider(preference[4], 1,10)
             if st.button("Recommend", key="hi"):
                 user = np.array([level1,level2,level3,level4,level5]) 
+
                 column = preference # hämtar kolumn siffror för varje preferens som användaren fyllt i
                 number = len(preference)
                 city_similar = find_similarity(column, user, number,scores,city)
-                col_list = ["City"]
+
                 city_similar.to_csv('newTextFile.csv')
-                df_cities = pd.read_csv('newTextFile.csv', usecols=col_list)
+                df_cities = pd.read_csv('newTextFile.csv', usecols=['City', '0'])
                 df_cities["City"].to_csv('nameOfCities.csv')
+                df_cities["0"].to_csv('scoresOfCities.csv')
+                
+                #for index, val in enumerate(df): # ändra 1an till index
+                    
+                breakdown = pd.DataFrame(df, columns = ['Category','Score'])
+                breakdown['Score'] = breakdown['Score'].round(1)
+                    
                 with st.spinner("Analysing..."):
                     time.sleep(5)
                 st.text(f'\n\n\n')
                 st.markdown('--------------------------------------------**Recommendation**--------------------------------------------')
                 st.text(f'\n\n\n\n\n\n')
+                
+                st.markdown(f'Based on your aggregate preferences and ratings, ')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
-                    st.markdown(f'Based on your aggregate preferences and ratings, **{df_cities["City"][index]}** is the top recommended city to move/travel to.')
-                    title, country , subtitle, response = final_answer(df, df_cities["City"][index], data)
+                    st.markdown(f'**{df_cities["City"][index]},**')
+                st.markdown(f'are the top 5 recommended cities to move/travel to.')
+                for index, val in enumerate(df_cities["City"]): # ändra 1an till index
+                    (title, country , subtitle, response) = final_answer(df, df_cities["City"][index], data)
                     st.text(f'\n\n\n\n\n\n')
-                    
-                    
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
                     st.write(f'{df_cities["City"][index]} is a city in {country}. {response}')
-                    st.text(subtitle)
-                    #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).background_gradient(cmap='Blues').set_properties(subset=['Score'], **{'width': '250px'}))
-                    st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
+                    st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
+                st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
 
 
          elif len(preference) > 5:
               st.warning("choose only 5 features")
          else:
              st.error("You are to choose at least 5 feature from the bove options")
-    #the end
-    if st.button("Thanks"):
-          st.balloons()
 
 if __name__ == "__main__":
     main()
