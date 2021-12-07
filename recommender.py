@@ -108,17 +108,19 @@ def main():
                 
                 st.markdown(f'Based on your aggregate preferences and ratings, ')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
-                    st.markdown(f'**{df_cities["City"][index]},**')
-                st.markdown(f'are the top 5 recommended cities to move/travel to.')
+                    st.markdown(f'{index+1}. **{df_cities["City"][index]},**')
+                st.markdown(f'are the top 4 recommended cities to move/travel to.')
                 for index, val in enumerate(df_cities["City"]): # ändra 1an till index
                     (title, country , subtitle, response) = final_answer(df, df_cities["City"][index], data)
                     st.text(f'\n\n\n\n\n\n')
                     st.markdown(f'----------------------------------------------**{title}**---------------------------------------------')
                     st.write(f'{df_cities["City"][index]} is a city in {country}. {response}')
-
-                    breakdown = pd.DataFrame(df["City"], columns = ['Category','Score'])
-                    breakdown['Score'] = breakdown['Score'].round(1)
-                    st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
+                   
+                    #getCity = df[["City"]].loc[city]
+                    #getCity.to_csv("Test")
+                    #breakdown = pd.DataFrame(getCity, columns = ['Category','Score'])
+                    #breakdown['Score'] = breakdown['Score'].round(1)
+                    #st.table(breakdown.style.format({'Score':'{:17,.1f}'}).set_properties(subset=['Score'], **{'width': '250px'}))
                 st.markdown(f'For more info on city rank scores, check [here](https://www.nestpick.com/millennial-city-ranking-2018/)')
 
 
