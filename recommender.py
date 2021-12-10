@@ -6,6 +6,16 @@ import numpy as np
 import time
 from sklearn.metrics.pairwise import cosine_similarity
 
+from math import*
+ 
+def manhattan_distance(x,y):
+ 
+    return sum(abs(a-b) for a,b in zip(x,y))
+ 
+def euclidean_distance(x,y):
+ 
+    return sqrt(sum(pow(a-b,2) for a, b in zip(x, y)))
+
 # import the data and create revelent dataframes
 def load():
     # url = 'https://www.nestpick.com/work-from-anywhere-index/'
@@ -33,9 +43,11 @@ def find_similarity(column, user, number,scores, city, numberOfCities): # city =
     for index,city in enumerate(new_df.index):
         city_old = new_df.loc[city].values.reshape(-1,number) #loc = access a group of rows and columns by label
         user = user.reshape(-1, number)
-        score = cosine_similarity(city_old, user)
+        #score = cosine_similarity(city_old, user)
+        score = euclidean_distance(city_old[0], user[0])
         value.append(score) # sparar värdet i value
-        # ÄNDRA HÄR FÖR ATT FÅ FLERA STÄDER
+        #value.append(score.all()) # sparar värdet i value
+
     similarity = pd.Series(value, index=new_df.index)
     city_similar = similarity.sort_values(ascending=False).astype(float).iloc[0:numberOfCities] #Instead of idxmax use 5 top values for multiple cities?
     
