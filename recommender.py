@@ -41,16 +41,20 @@ def find_similarity(column, user, number,scores, city, numberOfCities): # city =
         new_df = scores[scores.index !=  locate[0]][column] #don´t get the city youre from
     value = []
     for index,city in enumerate(new_df.index):
-        city_old = new_df.loc[city].values.reshape(-1,number) #loc = access a group of rows and columns by label
+        city_old = new_df.loc[city].values.reshape(-1,number) #loc = access a group of rows and columns by label. We get al the cities values depending on our choosen features.
         user = user.reshape(-1, number)
-        #score = cosine_similarity(city_old, user)
-        score = euclidean_distance(city_old[0], user[0])
+        score = cosine_similarity(city_old, user)
+        #score = euclidean_distance(city_old[0], user[0])
         value.append(score) # sparar värdet i value
         #value.append(score.all()) # sparar värdet i value
+        #print(city_old, score, sep='__________\n' )
+       
 
     similarity = pd.Series(value, index=new_df.index)
     city_similar = similarity.sort_values(ascending=False).astype(float).iloc[0:numberOfCities] #Instead of idxmax use 5 top values for multiple cities?
-    
+    print("City_Similarity : ", city_similar)
+    print(value[0], "+++++++++")
+
     # message = f'Based on your aggregate preferences and ratings, {city_similar} is the top recommended city to move/travel to.'
     return city_similar
 
@@ -63,10 +67,11 @@ def final_answer(df,word, data):
 
 #The app controller
 def main():
+    print("-----------START----------")
     st.title('City Recommender')
     df, data,scores, location = load()
     location.append('Others')
-    numbers = ([1,2,3,4,5,6,7,8,9,10])
+    numbers = ([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50])
     city = st.selectbox("Location of Residence", location)
     numberOfCities= st.selectbox("Choose how many cities to recommend", numbers)
     preference = st.multiselect("Choose the 5 features that matters to you the most in a city",scores.columns)
